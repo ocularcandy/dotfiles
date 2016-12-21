@@ -1,0 +1,128 @@
+# handy day to day operations
+alias desk='cd ~/Desktop'
+
+# handy dandy terminal commands
+alias lh='clear;ls -larth'
+alias cp='cp -v'
+alias mv='mv -v'
+alias rm='rm -v'
+alias ls='ls -la -G'
+alias lscnt='ls | wc -l'
+alias cls='clear; ls'
+
+# git commands
+alias gb='git branch'
+alias gst='git status'
+alias gco='git checkout'
+alias gcm='git checkout master'
+alias gsl='git stash list'
+alias gpom='git pull origin master'
+
+alias glg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
+# remove .DS_Store
+alias rmds="find ./ -type f -name '.DS_Store' -delete"
+
+# open macvim via terminal
+alias mvim="open -a /Applications/MacVim.app"
+
+#################### git-completion ########################
+source ~/git-completion.bash
+####################### FUNCTIONS ###########################
+
+function set_window_tab_and_title()
+{
+	local pwd_length=42 # set the max length just incase with dig deep
+	local dir="$PWD" # get the current working directory
+
+	# substitue a leading path that's in $HOME for "~"
+	if [[ "$HOME" == ${dir:0:${#HOME}}} ]]; then
+		dir="~${dir:${#HOME}}"
+	fi
+
+	# append a trailing slash if it's not there already
+	if [[ ${dir:${#dir}-1 != "/" ]]; then
+		dir="$dir/"
+	fi
+
+	# truncate if we are too long.
+	# We preserve the leading '/' or '~/', and substitue
+	# ellipses for some directories in the middle
+
+	if [[ "$dir" =~ (~){0,1}/.*.{${pwd_length}} ]]; then
+		local tilde=${BASH_REMATCH[1]}
+		local directory=${BASH_REMATCH[2]}
+
+		# at this point, $directory is the truncated end-section of the
+		# path.  we will now make it only contain full directory names
+		# (eg ibrary/Mail" => "/Mail"
+		if [[ "$directory" =~ [^/]*(.*)  ]]; then
+			directory=${BASH_REMATCH[1]}
+		fi
+
+		# cant work out if its possible to use the Unicode ellipsis...
+		dir="$tilde/...$directory"
+	fi
+
+	printf "\033]0;$USER@localhost:%s\007" "$dir"
+}
+
+# show current git branch in command line
+parse_git_branch() {
+	git branch 2> /dev/null |sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+parse_git_tag() {
+	git describe --tags 2> /dev/null
+}
+
+parse_git_branch_or_tag() {
+	local OUT="$(parse_git_branch)"
+	if [ "$OUT" == " ((no branch))" ]; then
+		$OUT="[$(parse_git_tag)]";
+	fi
+
+	echo $OUT
+}
+
+PINK="\[\033[0;35m\]"
+CYAN="\[\033[0;36m\]"
+RED="\[\033[0;31m\]"
+YELLOW="\[\033[0;33m\]"
+GREEN="\[\033[0;32m\]"
+NO_COLOUR="\[\033[0;0m\]"
+
+PS1="$PINK\u$NO_COLOUR:\w$CYAN\$(parse_git_branch_or_tag)$NO_COLOUR\$ "
+export PS1
+################################################################################
+read -r -d '' VAR << 'EOF'
+. Good Morning Starshine!!
+    The World says 'Hello'!
+                                                ,o88888
+                                               ,o8888888'
+                         ,:o:o:oooo.        ,8O88Pd8888"
+                     ,.::.::o:ooooOoOoO. ,oO8O8Pd888'"
+                   ,.:.::o:ooOoOoOO8O8OOo.8OOPd8O8O"
+                  , ..:.::o:ooOoOOOO8OOOOo.FdO8O8"
+                 , ..:.::o:ooOoOO8O888O8O,COCOO"
+                , . ..:.::o:ooOoOOOO8OOOOCOCO"
+                 . ..:.::o:ooOoOoOO8O8OCCCC"o
+                    . ..:.::o:ooooOoCoCCC"o:o
+                    . ..:.::o:o:,cooooCo"oo:o:
+                 `   . . ..:.:cocoooo"'o:o:::'
+                 .`   . ..::ccccoc"'o:o:o:::'
+                :.:.    ,c:cccc"':.:.:.:.:.'
+              ..:.:"'`::::c:"'..:.:.:.:.:.'
+            ...:.'.:.::::"'    . . . . .'
+           .. . ....:."' `   .  . . ''
+         . . . ...."'
+         .. . ."'
+        .
+EOF
+echo "$VAR"
+
+export PATH="$HOME/.rbenv/bin:/usr/local/Cellar/ruby/2.3.1/bin/:$PATH"
+eval "$(rbenv init -)"
+
+
+

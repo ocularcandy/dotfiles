@@ -1,0 +1,91 @@
+execute pathogen#infect()
+
+let g:netrw_liststyle=3 "explore liststyle
+set t_Co=256
+set background=light
+colorscheme mushroom
+
+set noswapfile
+set nowrap
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_enable_javascript_checker = 1
+
+" dont make vim compatible with vi
+set nocompatible
+
+" turn on syntax highlighting
+syntax enable
+
+" and show line numbers
+set number
+
+" make a mark for col 80
+set colorcolumn=80
+
+" make vim try to detect file types and load plugins for them
+filetype on
+filetype plugin on
+filetype indent on
+
+set guifont=Monaco:h09
+
+" reload files changed outside of vim
+set autoread
+
+"encoding is utf8
+set encoding=utf-8
+set fileencoding=utf-8
+
+" search settings
+set hlsearch " highlight searches by default
+set incsearch " find the next match as we type the search
+
+" keep the cursor visible witin 3 lines when scrolling
+set scrolloff=3
+
+" indentation
+set expandtab " use spaces instead of tabs
+set autoindent " based on line above, works most of the time
+set smartindent " smarte indent for c-like langs
+" set shiftwidth=4 " when reading, tabs are four spaces
+set shiftwidth=2
+" set softtabstop=4 " in insert mode tabs are four spaces
+set softtabstop=2
+" no lines longer than 80 cols
+"set textwidth=80
+
+" On file types...
+"   .md files are markdown files
+autocmd BufNewFile,BufRead *.md setlocal ft=markdown
+"   .twig files use html syntax
+autocmd BufNewFile,BufRead *.twig setlocal ft=html
+"   .less files use less syntax
+autocmd BufNewFile,BufRead *.less setlocal ft=less
+"   .jade files use jade syntax
+autocmd BufNewFile,BufRead *.jade setlocal ft=jade
+
+" open NERDTree when vim starts
+autocmd vimenter * NERDTree
+
+" close vim if the only window left open is a NERDTree
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+"
+" set listchars=tab:▸\ ,eol:¬
+"
+" let g:indent_guides_auto_colors = 0
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=grey42 ctermbg=242
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=grey82 ctermbg=252
+
+" JsDoc config
+"let g:jsdoc_allow_input_prompt: 1
+
+
+
